@@ -19,6 +19,7 @@ package com.netflix.priam.identity;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.netflix.priam.IConfiguration;
+import com.netflix.priam.identity.token.TokenRetrieverBase;
 import com.netflix.priam.utils.ITokenManager;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -69,7 +70,7 @@ public class DoubleRing {
             int currentSlot = data.getId() - hash;
             int new_slot = currentSlot + 3 > new_ring_size ? (currentSlot + 3) - new_ring_size : currentSlot + 3;
             String token = tokenManager.createToken(new_slot, new_ring_size, config.getDC());
-            factory.create(data.getApp(), new_slot + hash, InstanceIdentity.DUMMY_INSTANCE_ID, config.getHostname(), config.getHostIP(), data.getRac(), null, token);
+            factory.create(data.getApp(), new_slot + hash, TokenRetrieverBase.DUMMY_INSTANCE_ID, config.getHostname(), config.getHostIP(), data.getRac(), null, token);
         }
     }
 

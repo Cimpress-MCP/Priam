@@ -691,12 +691,6 @@ public class FakeConfiguration implements IConfiguration
     }
 
     @Override
-    public String getDseClusterType() {
-        // TODO Auto-generated method stub
-        return "cassandra";
-    }
-
-	@Override
 	public boolean isCreateNewTokenEnable() {
 		return true;  //allow Junit test to create new tokens
 	}

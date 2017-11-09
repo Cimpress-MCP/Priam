@@ -568,9 +568,6 @@ public interface IConfiguration {
 
     public boolean getAutoBoostrap();
 
-    //if using with Datastax Enterprise
-    public String getDseClusterType();
-
     public boolean isCreateNewTokenEnable();
 
     /*

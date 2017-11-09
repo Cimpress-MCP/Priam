@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.netflix.priam.identity.IMembership;
+import com.netflix.priam.identity.PriamInstance;
 
 public class FakeMembership implements IMembership
 {
@@ -38,17 +39,10 @@ public class FakeMembership implements IMembership
     }
 
     @Override
-    public List<String> getRacMembership()
+    public boolean isInstanceAlive(PriamInstance instance)
     {
-        return instances;
+        return instances.contains(instance.getInstanceId());
     }
-    
-    @Override
-    public List<String> getCrossAccountRacMembership()
-    {
-       return null;	
-    }
-
 
     @Override
     public int getRacMembershipSize()
@@ -81,12 +75,5 @@ public class FakeMembership implements IMembership
     {
         // TODO Auto-generated method stub
         return null;
-    }
-
-    @Override
-    public void expandRacMembership(int count)
-    {
-        // TODO Auto-generated method stub
-        
     }
 }
