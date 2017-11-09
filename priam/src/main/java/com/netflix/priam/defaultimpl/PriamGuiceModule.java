@@ -20,6 +20,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 import com.netflix.priam.ICredential;
 import com.netflix.priam.ICredentialGeneric;
+import com.netflix.priam.aws.ASGMembership;
 import com.netflix.priam.aws.S3CrossAccountFileSystem;
 import com.netflix.priam.aws.S3EncryptedFileSystem;
 import com.netflix.priam.aws.S3FileSystem;
@@ -38,6 +39,7 @@ import com.netflix.priam.cryptography.pgp.PgpCryptography;
 import com.netflix.priam.google.GcsCredential;
 import com.netflix.priam.google.GoogleEncryptedFileSystem;
 import com.netflix.priam.identity.AwsInstanceEnvIdentity;
+import com.netflix.priam.identity.IMembership;
 import com.netflix.priam.identity.InstanceEnvIdentity;
 import com.netflix.priam.identity.token.*;
 import com.netflix.priam.merics.BackupMetricsMgr;
@@ -67,6 +69,8 @@ public class PriamGuiceModule extends AbstractModule {
         {
             Class credentialImplementation = Class.forName(System.getProperty("ICREDENTIAL_IMPLEMENTATION", ClearCredential.class.getTypeName()));
             bind(ICredential.class).to(credentialImplementation);
+            Class membershipImplementation = Class.forName(System.getProperty("IMEMBERSHIP_IMPLEMENTATION", ASGMembership.class.getTypeName()));
+            bind(IMembership.class).to(membershipImplementation);
         }
         catch (ClassNotFoundException e)
         {

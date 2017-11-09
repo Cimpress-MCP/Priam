@@ -59,14 +59,13 @@ public final class SimpleDBConfigSource extends AbstractConfigSource {
     }
 
     @Override
-    public void intialize(final String asgName, final String region) {
-        super.intialize(asgName, region);
+    public void intialize(final String appid, final String region) {
+        super.intialize(appid, region);
 
         // End point is us-east-1
         AmazonSimpleDB simpleDBClient = AmazonSimpleDBClient.builder().withCredentials(provider.getAwsCredentialProvider()).build();
 
         String nextToken = null;
-        String appid = asgName.lastIndexOf('-') > 0 ? asgName.substring(0, asgName.indexOf('-')) : asgName;
         logger.info("appid used to fetch properties is: {}", appid);
         do {
             SelectRequest request = new SelectRequest(String.format(ALL_QUERY, appid));

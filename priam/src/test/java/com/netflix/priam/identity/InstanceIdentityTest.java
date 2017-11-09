@@ -17,6 +17,7 @@
 
 package com.netflix.priam.identity;
 
+import com.netflix.priam.identity.token.TokenRetrieverBase;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -106,7 +107,7 @@ public class InstanceIdentityTest extends InstanceTestUtils
             System.out.println(lst.get(i));
             if (0 == i % 2)
                 continue;
-            assertEquals(InstanceIdentity.DUMMY_INSTANCE_ID, lst.get(i).getInstanceId());
+            assertEquals(TokenRetrieverBase.DUMMY_INSTANCE_ID, lst.get(i).getInstanceId());
         }
         assertEquals(before * 2, lst.size());
     }
