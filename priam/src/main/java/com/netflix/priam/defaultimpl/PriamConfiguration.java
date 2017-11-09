@@ -283,7 +283,8 @@ public class PriamConfiguration implements IConfiguration {
         NETWORK_VPC = instanceDataRetriever.getVpcId();
 
         setupEnvVars();
-        this.config.intialize(ASG_NAME, REGION);
+        String appid = ASG_NAME.lastIndexOf('-') > 0 ? ASG_NAME.substring(0, ASG_NAME.indexOf('-')) : ASG_NAME;
+        this.config.intialize(appid, REGION);
         setDefaultRACList(REGION);
         populateProps();
         SystemUtils.createDirs(getBackupCommitLogLocation());
@@ -989,11 +990,6 @@ public class PriamConfiguration implements IConfiguration {
 
     public boolean getAutoBoostrap() {
         return config.get(CONFIG_AUTO_BOOTSTRAP, true);
-    }
-
-    //values are cassandra, solr, hadoop, spark or hadoop-spark
-    public String getDseClusterType() {
-        return config.get(CONFIG_DSE_CLUSTER_TYPE + "." + ASG_NAME, "cassandra");
     }
 
     @Override
