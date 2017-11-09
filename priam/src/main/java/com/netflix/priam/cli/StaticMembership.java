@@ -17,6 +17,7 @@
 package com.netflix.priam.cli;
 
 import com.netflix.priam.identity.IMembership;
+import com.netflix.priam.identity.PriamInstance;
 import org.apache.cassandra.io.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,13 +66,9 @@ public class StaticMembership implements IMembership {
     }
 
     @Override
-    public List<String> getRacMembership() {
-        return racMembership;
-    }
-
-    @Override
-    public List<String> getCrossAccountRacMembership() {
-        return null;
+    public boolean isInstanceAlive(PriamInstance instance)
+    {
+        return racMembership.contains(instance.getInstanceId());
     }
 
     @Override
@@ -97,9 +94,5 @@ public class StaticMembership implements IMembership {
     @Override
     public List<String> listACL(int from, int to) {
         return null;
-    }
-
-    @Override
-    public void expandRacMembership(int count) {
     }
 }

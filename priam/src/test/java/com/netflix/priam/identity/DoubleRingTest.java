@@ -19,6 +19,7 @@ package com.netflix.priam.identity;
 
 import java.util.List;
 
+import com.netflix.priam.identity.token.TokenRetrieverBase;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
@@ -57,7 +58,7 @@ public class DoubleRingTest extends InstanceTestUtils
             int id = ins.getId() - tokenManager.regionOffset(config.getDC());
             System.out.println(ins);
             if (0 != id % 2)
-                assertEquals(ins.getInstanceId(), InstanceIdentity.DUMMY_INSTANCE_ID);
+                assertEquals(ins.getInstanceId(), TokenRetrieverBase.DUMMY_INSTANCE_ID);
         }
     }
 

@@ -50,12 +50,12 @@ public class PreGeneratedTokenRetriever extends TokenRetrieverBase implements IP
         logger.info("Looking for any pre-generated token");
 
         final List<PriamInstance> allIds = factory.getAllIds(config.getAppName());
-        List<String> asgInstances = membership.getRacMembership();
+
         // Sleep random interval - upto 15 sec
         sleeper.sleep(new Random().nextInt(5000) + 10000);
         for (PriamInstance dead : allIds) {
             // test same zone and is it is alive.
-            if (!dead.getRac().equals(config.getRac()) || asgInstances.contains(dead.getInstanceId()) || !isInstanceDummy(dead))
+            if (!dead.getRac().equals(config.getRac()) || membership.isInstanceAlive(dead) || !isInstanceDummy(dead))
                 continue;
             logger.info("Found pre-generated token: {}", dead.getToken());
             PriamInstance markAsDead = factory.create(dead.getApp() + "-dead", dead.getId(), dead.getInstanceId(), dead.getHostName(), dead.getHostIP(), dead.getRac(), dead.getVolumes(),

@@ -62,48 +62,17 @@ public class DeadTokenRetriever extends TokenRetrieverBase implements IDeadToken
         this.insEnvIdentity = insEnvIdentity;
     }
 
-    private List<String> getDualAccountRacMembership(List<String> asgInstances) {
-        logger.info("Dual Account cluster");
-
-        List<String> crossAccountAsgInstances = membership.getCrossAccountRacMembership();
-
-        if (logger.isInfoEnabled()) {
-            if (insEnvIdentity.isClassic()) {
-                logger.info("EC2 classic instances (local ASG): " + Arrays.toString(asgInstances.toArray()));
-                logger.info("VPC Account (cross-account ASG): " + Arrays.toString(crossAccountAsgInstances.toArray()));
-            } else {
-                logger.info("VPC Account (local ASG): " + Arrays.toString(asgInstances.toArray()));
-                logger.info("EC2 classic instances (cross-account ASG): " + Arrays.toString(crossAccountAsgInstances.toArray()));
-            }
-        }
-
-        // Remove duplicates (probably there are not)
-        asgInstances.removeAll(crossAccountAsgInstances);
-
-        // Merge the two lists
-        asgInstances.addAll(crossAccountAsgInstances);
-        logger.info("Combined Instances in the AZ: {}", asgInstances);
-
-        return asgInstances;
-    }
-
     @Override
     public PriamInstance get() throws Exception {
 
         logger.info("Looking for a token from any dead node");
         final List<PriamInstance> allIds = factory.getAllIds(config.getAppName());
-        List<String> asgInstances = membership.getRacMembership();
-        if (config.isDualAccount()) {
-            asgInstances = getDualAccountRacMembership(asgInstances);
-        } else {
-            logger.info("Single Account cluster");
-        }
 
         // Sleep random interval - upto 15 sec
         sleeper.sleep(new Random().nextInt(5000) + 10000);
         for (PriamInstance dead : allIds) {
             // test same zone and is it is alive.
-            if (!dead.getRac().equals(config.getRac()) || asgInstances.contains(dead.getInstanceId()) || super.isInstanceDummy(dead))
+            if (!dead.getRac().equals(config.getRac()) || membership.isInstanceAlive(dead) || super.isInstanceDummy(dead))
                 continue;
             logger.info("Found dead instances: {}", dead.getInstanceId());
             PriamInstance markAsDead = factory.create(dead.getApp() + "-dead", dead.getId(), dead.getInstanceId(), dead.getHostName(), dead.getHostIP(), dead.getRac(), dead.getVolumes(),
