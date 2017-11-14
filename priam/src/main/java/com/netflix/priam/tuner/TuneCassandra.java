@@ -50,7 +50,7 @@ public class TuneCassandra extends Task {
 
         while (!isDone) {
             try {
-                tuner.writeAllProperties(config.getYamlLocation(), null, config.getSeedProviderName());
+                tuner.writeAllProperties(config.getYamlLocation(), config.getHostIP(), config.getSeedProviderName());
                 tuner.updateJVMOptions();
                 isDone = true;
                 instanceState.setYmlWritten(true);
