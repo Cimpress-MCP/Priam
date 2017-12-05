@@ -43,6 +43,7 @@ public class FakeConfiguration implements IConfiguration
     public String instance_id;
     public String restorePrefix;
     public int numTokens;
+    public List<String> seeds;
 
     public FakeConfiguration()
     {
@@ -57,6 +58,7 @@ public class FakeConfiguration implements IConfiguration
         this.instance_id = ins_id;
         this.restorePrefix  = "";
         this.numTokens = 1;
+        this.seeds = new ArrayList<>();
     }
 
     @Override
@@ -402,6 +404,11 @@ public class FakeConfiguration implements IConfiguration
     public String getSeedProviderName()
     {
         return "org.apache.cassandra.locator.SimpleSeedProvider";
+    }
+
+    @Override public List<String> getSeeds()
+    {
+        return seeds;
     }
 
     @Override

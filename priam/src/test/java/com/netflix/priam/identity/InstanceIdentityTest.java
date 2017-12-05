@@ -19,6 +19,7 @@ package com.netflix.priam.identity;
 
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -61,13 +62,23 @@ public class InstanceIdentityTest extends InstanceTestUtils
         assertEquals(8, identity.getInstance().getId() - hash);
         assertTrue(identity.isExternallyDefinedToken());
     }
-    
+
     @Test
     public void testGetSeeds() throws Exception
     {
         createInstances();
         identity = createInstanceIdentity("az1", "fakeinstance1");
         assertEquals(3, identity.getSeeds().size());
+    }
+
+    @Test
+    public void testGetStaticSeeds() throws Exception
+    {
+        createInstances();
+        config.seeds = Arrays.asList("astaticseed");
+        identity = createInstanceIdentity("az1", "fakeinstance1");
+        assertEquals(1, identity.getSeeds().size());
+        assertEquals("astaticseed", identity.getSeeds().get(0));
     }
 
     @Test

@@ -263,6 +263,10 @@ public class InstanceIdentity {
     }
 
     public List<String> getSeeds() throws UnknownHostException {
+        if (config.getSeeds().size() > 0) {
+            return config.getSeeds();
+        }
+
         populateRacMap();
         List<String> seeds = new LinkedList<String>();
         // Handle single zone deployment
