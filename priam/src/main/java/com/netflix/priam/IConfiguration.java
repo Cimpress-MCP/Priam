@@ -427,6 +427,11 @@ public interface IConfiguration {
     public String getSeedProviderName();
 
     /**
+     * @return Get a static list of seeds to provide
+     */
+    public List<String> getSeeds();
+
+    /**
      * @return Get Memtable throughput settings
      */
     public int getMemtableTotalSpaceMB();
