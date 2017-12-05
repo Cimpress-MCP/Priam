@@ -63,7 +63,15 @@ public class PriamGuiceModule extends AbstractModule {
         bind(IFileCryptography.class).annotatedWith(Names.named("filecryptoalgorithm")).to(PgpCryptography.class);
         bind(ICredentialGeneric.class).annotatedWith(Names.named("gcscredential")).to(GcsCredential.class);
         bind(ICredentialGeneric.class).annotatedWith(Names.named("pgpcredential")).to(PgpCredential.class);
-        bind(ICredential.class).to(ClearCredential.class);
+        try
+        {
+            Class credentialImplementation = Class.forName(System.getProperty("ICREDENTIAL_IMPLEMENTATION", ClearCredential.class.getTypeName()));
+            bind(ICredential.class).to(credentialImplementation);
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw new RuntimeException(e);
+        }
         bind(IDeadTokenRetriever.class).to(DeadTokenRetriever.class);
         bind(IPreGeneratedTokenRetriever.class).to(PreGeneratedTokenRetriever.class);
         bind(INewTokenRetriever.class).to(NewTokenRetriever.class);
