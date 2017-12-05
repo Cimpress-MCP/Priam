@@ -93,8 +93,10 @@ public class PriamStartupAgent
         	{
         		System.setProperty("cassandra.replace_token", token);
         	} else 
-        	{	
-               System.setProperty("cassandra.replace_address", replacedIp);
+        	{
+                if (StringUtils.isNotBlank(replacedIp)) {
+                    System.setProperty("cassandra.replace_address", replacedIp);
+                }
         	}
         }
 

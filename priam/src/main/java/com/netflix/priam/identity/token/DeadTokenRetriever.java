@@ -113,7 +113,7 @@ public class DeadTokenRetriever extends TokenRetrieverBase implements IDeadToken
 
             //find the replaced IP
             this.replacedIp = findReplaceIp(allIds, markAsDead.getToken(), markAsDead.getDC());
-            if (this.replacedIp == null)
+            if (replacedIp == null && confirmReplacedIp(allIds, markAsDead.getHostIP(), markAsDead.getDC()))
                 this.replacedIp = markAsDead.getHostIP();
 
             String payLoad = markAsDead.getToken();
@@ -155,7 +155,7 @@ public class DeadTokenRetriever extends TokenRetrieverBase implements IDeadToken
         return null;
     }
 
-    private String getIp(String host, String token) throws ParseException {
+    private JSONObject getGossipInfo(String host) throws ParseException {
         ClientConfig config = new DefaultClientConfig();
         Client client = Client.create(config);
         String baseURI = getBaseURI(host);
@@ -172,7 +172,7 @@ public class DeadTokenRetriever extends TokenRetrieverBase implements IDeadToken
 
             textEntity = clientResp.getEntity(String.class);
 
-            logger.info("Respond from calling gossipinfo on host[{}] and token[{}] : {}", host, token, textEntity);
+            logger.info("Respond from calling gossipinfo on host[{}] : {}", host, textEntity);
 
             if (StringUtils.isEmpty(textEntity))
                 return null;
@@ -185,6 +185,12 @@ public class DeadTokenRetriever extends TokenRetrieverBase implements IDeadToken
         Object obj = parser.parse(textEntity);
 
         JSONObject jsonObject = (JSONObject) obj;
+
+        return jsonObject;
+    }
+
+    private String getIp(String host, String token) throws ParseException {
+        JSONObject jsonObject = getGossipInfo(host);
 
         Iterator iter = jsonObject.keySet().iterator();
 
@@ -203,6 +209,25 @@ public class DeadTokenRetriever extends TokenRetrieverBase implements IDeadToken
 
         }
         return null;
+    }
+
+    private boolean confirmReplacedIp(List<PriamInstance> allIds, String replacedIp, String location) {
+        for (PriamInstance ins : allIds) {
+            if (replacedIp.equalsIgnoreCase(ins.getHostIP()) || !ins.getDC().equals(location)) { //avoid using dead instance and other regions' instances
+                continue;
+            }
+
+            try {
+                JSONObject jsonObject = getGossipInfo(ins.getHostName());
+                if (jsonObject != null && jsonObject.keySet().contains(replacedIp)) {
+                    logger.info("Confirmed the IP to replace: {}", replacedIp);
+                    return true;
+                }
+            } catch (ParseException e) {
+            }
+        }
+
+        return false;
     }
 
     private String getBaseURI(String host) {
