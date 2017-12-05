@@ -184,7 +184,6 @@ public class PriamConfiguration implements IConfiguration {
 
     //Running instance meta data
     private String RAC;
-    private String PUBLIC_IP;
 
     //== vpc specific   
     private String NETWORK_VPC;  //Fetch the vpc id of running instance
@@ -255,14 +254,6 @@ public class PriamConfiguration implements IConfiguration {
 
     @Inject
     public PriamConfiguration(ICredential provider, IConfigSource config, InstanceEnvIdentity insEnvIdentity) {
-        // public interface meta-data does not exist when Priam runs in AWS VPC (priam.vpc=true)
-        String p_ip = "";
-               try {
-            p_ip = SystemUtils.getDataFromUrl("http://169.254.169.254/latest/meta-data/public-ipv4").trim();
-        } catch (RuntimeException ex) {
-            // swallow
-        }
-        this.PUBLIC_IP = p_ip;
         this.provider = provider;
         this.config = config;
         this.insEnvIdentity = insEnvIdentity;
@@ -284,7 +275,6 @@ public class PriamConfiguration implements IConfiguration {
         }
 
         RAC = instanceDataRetriever.getRac();
-        PUBLIC_IP = instanceDataRetriever.getPublicIP();
 
         NETWORK_VPC = instanceDataRetriever.getVpcId();
 
@@ -691,7 +681,7 @@ public class PriamConfiguration implements IConfiguration {
     @Override
     public String getHostIP() {
         if (this.isVpcRing()) return LOCAL_IP;
-        else return PUBLIC_IP;
+        else return getInstanceDataRetriever().getPublicHostname();
     }
 
     @Override
