@@ -1,5 +1,6 @@
 plugins {
-    id 'nebula.netflixoss' version '5.0.0'
+    id 'nebula.netflixoss' version '4.0.0'
+    id 'nebula.provided-base' version '3.0.3'
 }
 
 ext.githubProjectName = 'Priam'
@@ -12,11 +13,6 @@ allprojects {
 
     repositories {
         jcenter()
-    }
-    
-    configurations {
-      all*.exclude group: 'ch.qos.logback', module: 'logback-classic'
-      all*.exclude group: 'ch.qos.logback', module: 'logback-core'
     }
 
     dependencies {
@@ -39,9 +35,6 @@ allprojects {
       compile 'com.googlecode.json-simple:json-simple:1.1.1'
       compile 'org.xerial.snappy:snappy-java:1.1.2.6'
       compile 'org.yaml:snakeyaml:1.18'
-      compile ('org.apache.cassandra:cassandra-all:2.1.17'){
-          exclude group: 'ch.qos.logback', module: 'logback-classic'
-      }
       compile 'javax.ws.rs:jsr311-api:1.1.1'
       compile 'joda-time:joda-time:2.9.9'
       compile 'org.apache.commons:commons-configuration2:2.1.1'
@@ -60,7 +53,6 @@ allprojects {
       }
       compile 'com.google.apis:google-api-services-storage:v1-rev100-1.22.0'
       compile 'com.google.http-client:google-http-client-jackson2:1.22.0'
-      compileOnly 'javax.servlet:javax.servlet-api:3.1.0'
       testCompile 'org.jmockit:jmockit:1.31'
       testCompile "org.spockframework:spock-core:1.1-groovy-2.4"
       testCompile 'junit:junit:4.12'
