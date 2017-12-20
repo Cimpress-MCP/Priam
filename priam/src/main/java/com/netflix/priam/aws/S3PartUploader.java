@@ -65,8 +65,8 @@ public class S3PartUploader extends RetryableCallable<Void> {
         req.setInputStream(new ByteArrayInputStream(dataPart.getPartData()));
         UploadPartResult res = client.uploadPart(req);
         PartETag partETag = res.getPartETag();
-        if (!partETag.getETag().equals(SystemUtils.toHex(dataPart.getMd5())))
-            throw new BackupRestoreException("Unable to match MD5 for part " + dataPart.getPartNo());
+        // if (!partETag.getETag().equals(SystemUtils.toHex(dataPart.getMd5())))
+        //    throw new BackupRestoreException("Unable to match MD5 for part " + dataPart.getPartNo());
         partETags.add(partETag);
         if (this.partsUploaded != null)
             this.partsUploaded.incrementAndGet();
